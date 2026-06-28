@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: founderbrain-ml
+  namespace: founderbrain
+spec:
+  replicas: {{ .Values.mlservice.replicas }}
+  selector:
+    matchLabels:
+      app: founderbrain-ml
+  template:
+    metadata:
+      labels:
+        app: founderbrain-ml
+    spec:
+      containers:
+        - name: ml
+          image: {{ .Values.mlservice.image }}
+          ports:
+            - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: founderbrain-ml
+  namespace: founderbrain
+spec:
+  selector:
+    app: founderbrain-ml
+  ports:
+    - port: 8000
+      targetPort: 8000
+  type: ClusterIP

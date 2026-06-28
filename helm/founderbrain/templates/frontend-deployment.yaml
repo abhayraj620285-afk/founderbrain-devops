@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: founderbrain-frontend
+  namespace: founderbrain
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: founderbrain-frontend
+  template:
+    metadata:
+      labels:
+        app: founderbrain-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: {{ .Values.frontend.image }}
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: founderbrain-frontend
+  namespace: founderbrain
+spec:
+  selector:
+    app: founderbrain-frontend
+  ports:
+    - port: 80
+      targetPort: 80
+  type: LoadBalancer

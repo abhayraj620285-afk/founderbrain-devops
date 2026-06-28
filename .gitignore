@@ -1,0 +1,14 @@
+# Terraform - never commit these
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/errored.tfstate
+terraform/*.tfstate*
+terraform/*.tflock
+
+# Helm - contains secrets
+helm/founderbrain/values.yaml
+
+# OS
+.DS_Store
