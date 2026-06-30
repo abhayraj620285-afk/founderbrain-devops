@@ -10,9 +10,9 @@ pipeline {
         stage('Pull Latest Images') {
             steps {
                 sh '''
-                    docker pull abhayraj01/founderbrain-backend:latest
-                    docker pull abhayraj01/founderbrain-frontend:latest
-                    docker pull abhayraj01/founderbrain-ml:latest
+                    /usr/local/bin/docker pull abhayraj01/founderbrain-backend:latest
+                    /usr/local/bin/docker pull abhayraj01/founderbrain-frontend:latest
+                    /usr/local/bin/docker pull abhayraj01/founderbrain-ml:latest
                 '''
             }
         }
@@ -20,10 +20,10 @@ pipeline {
         stage('Deploy to EKS') {
             steps {
                 sh '''
-                    helm upgrade founderbrain \
-                        ~/Desktop/founderbrain-devops/helm/founderbrain \
+                    /opt/homebrew/bin/helm upgrade founderbrain \
+                        $HOME/Desktop/founderbrain-devops/helm/founderbrain \
                         --namespace founderbrain \
-                        --values ~/Desktop/founderbrain-devops/helm/founderbrain/values.yaml \
+                        --values $HOME/Desktop/founderbrain-devops/helm/founderbrain/values.yaml \
                         --set backend.image=abhayraj01/founderbrain-backend:latest \
                         --set frontend.image=abhayraj01/founderbrain-frontend:latest \
                         --set mlservice.image=abhayraj01/founderbrain-ml:latest
@@ -34,10 +34,10 @@ pipeline {
         stage('Verify Deployment') {
             steps {
                 sh '''
-                    kubectl rollout status deployment/founderbrain-backend -n founderbrain
-                    kubectl rollout status deployment/founderbrain-frontend -n founderbrain
-                    kubectl rollout status deployment/founderbrain-ml -n founderbrain
-                    kubectl get pods -n founderbrain
+                    /opt/homebrew/bin/kubectl rollout status deployment/founderbrain-backend -n founderbrain
+                    /opt/homebrew/bin/kubectl rollout status deployment/founderbrain-frontend -n founderbrain
+                    /opt/homebrew/bin/kubectl rollout status deployment/founderbrain-ml -n founderbrain
+                    /opt/homebrew/bin/kubectl get pods -n founderbrain
                 '''
             }
         }
