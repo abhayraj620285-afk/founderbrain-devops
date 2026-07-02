@@ -8,7 +8,6 @@ terraform/*.tfstate*
 terraform/*.tflock
 
 # Helm - contains secrets
-helm/founderbrain/values.yaml
 
 # OS
 .DS_Store
