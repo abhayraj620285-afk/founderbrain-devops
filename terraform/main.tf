@@ -44,6 +44,9 @@ module "eks" {
   subnet_ids = module.vpc.public_subnets
 
   cluster_endpoint_public_access = true
+  create_kms_key                  = false
+  cluster_encryption_config       = {}
+
 
   eks_managed_node_groups = {
     founderbrain_nodes = {

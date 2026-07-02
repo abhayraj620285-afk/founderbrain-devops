@@ -37,7 +37,8 @@ pipeline {
                             --values $WORKSPACE/helm/founderbrain/values.yaml \
                             --set backend.image=abhayraj01/founderbrain-backend:latest \
                             --set frontend.image=abhayraj01/founderbrain-frontend:latest \
-                            --set mlservice.image=abhayraj01/founderbrain-ml:latest
+                            --set mlservice.image=abhayraj01/founderbrain-ml:latest \
+                            --force
                     '''
                 }
             }
