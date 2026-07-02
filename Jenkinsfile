@@ -28,17 +28,33 @@ pipeline {
 
         stage('Deploy to EKS') {
             steps {
-                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                withCredentials([
+                    file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG'),
+                    string(credentialsId: 'db-url', variable: 'DB_URL'),
+                    string(credentialsId: 'db-username', variable: 'DB_USERNAME'),
+                    string(credentialsId: 'db-password', variable: 'DB_PASSWORD'),
+                    string(credentialsId: 'jwt-secret', variable: 'JWT_SECRET')
+                ]) {
                     sh '''
                         export KUBECONFIG=$KUBECONFIG
+
+                        # Create or update Kubernetes secret
+                        kubectl create secret generic founderbrain-secrets \
+                            --namespace founderbrain \
+                            --from-literal=DB_URL="$DB_URL" \
+                            --from-literal=DB_USERNAME="$DB_USERNAME" \
+                            --from-literal=DB_PASSWORD="$DB_PASSWORD" \
+                            --from-literal=JWT_SECRET="$JWT_SECRET" \
+                            --dry-run=client -o yaml | kubectl apply -f -
+
+                        # Deploy with Helm
                         helm upgrade founderbrain \
                             $WORKSPACE/helm/founderbrain \
                             --namespace founderbrain \
                             --values $WORKSPACE/helm/founderbrain/values.yaml \
                             --set backend.image=abhayraj01/founderbrain-backend:latest \
                             --set frontend.image=abhayraj01/founderbrain-frontend:latest \
-                            --set mlservice.image=abhayraj01/founderbrain-ml:latest \
-                            
+                            --set mlservice.image=abhayraj01/founderbrain-ml:latest
                     '''
                 }
             }

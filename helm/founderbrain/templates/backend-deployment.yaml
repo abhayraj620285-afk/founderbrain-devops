@@ -20,13 +20,25 @@ spec:
             - containerPort: 8080
           env:
             - name: DB_URL
-              value: {{ .Values.database.url | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: founderbrain-secrets
+                  key: DB_URL
             - name: DB_USERNAME
-              value: {{ .Values.database.username | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: founderbrain-secrets
+                  key: DB_USERNAME
             - name: DB_PASSWORD
-              value: {{ .Values.database.password | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: founderbrain-secrets
+                  key: DB_PASSWORD
             - name: JWT_SECRET
-              value: {{ .Values.jwt.secret | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: founderbrain-secrets
+                  key: JWT_SECRET
             - name: ML_SERVICE_URL
               value: "http://founderbrain-ml:8000"
             - name: PORT
